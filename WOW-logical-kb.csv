@@ -1,0 +1,4 @@
+﻿Ancient(x)->Wonder(x)
+Modern(x)->Wonder(x)
+Ancient(PyramidofGiza)
+-Ancient(Christ_the_Redeemer)
