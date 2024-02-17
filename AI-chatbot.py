@@ -4,7 +4,7 @@ Created on Wed Jan 31 19:30:59 2024
 
 @author: jared
 """
-####################API'S##############
+####################API'S & IMPORTS##############
 import wikipedia
 import aiml
 import json, requests
@@ -88,7 +88,7 @@ import pandas
 
 #initialise KB
 logic_kb=[]
-data = pandas.read_csv('logical-kb.csv', header=None)
+data = pandas.read_csv('WOW-logical-kb.csv', header=None)
 [logic_kb.append(read_expr(row)) for row in data[0]]
 prover = ResolutionProver()
 
@@ -128,21 +128,90 @@ def adjust_negation(expression):
         return '-' + expression
 
 
+####################Part C################################
+from tensorflow.keras.models import load_model
+from tkinter import filedialog
+from tkinter import *
+from tensorflow.keras.preprocessing import image
+import numpy as np
+
+selected_filename = None
+
+def browse_file():
+    global selected_filename
+    filename = filedialog.askopenfilename(initialdir="/", title="Select Image File", filetypes=(("Image files", "*.jpg;*.jpeg;*.png"), ("All files", "*.*")))
+    print("Selected file:", filename)
+    selected_filename = filename
+
+def predict_image(filename):
+    model = load_model("wow_model.h5")
+    # Load and preprocess the image
+    img = image.load_img(filename, target_size=(200, 200))
+    img_array = image.img_to_array(img)
+    img_array = np.expand_dims(img_array, axis=0) / 255.0
+
+    # Make predictions with the model
+    predictions = model.predict(img_array)
+    predicted_class_index = np.argmax(predictions)
+    predicted_classes = ["Burj Khalifa", "Christ the Redeemer", "Pyramids of Giza", "Roman Colosseum", "Taj Mahal"]
+
+    # Print the predicted class
+    if predicted_class_index < len(predicted_classes):
+        print("Predicted image: ", predicted_classes[predicted_class_index])
+    else:
+        print("Could not discern image")
+        
+####################Extra func voice recognition#######
+import speech_recognition as sr
+
+def speech_to_text():
+    # Initialize the recognizer
+    recognizer = sr.Recognizer()
+
+    # Open the microphone and start recording
+    with sr.Microphone() as source:
+        print("Please speak something...")
+        recognizer.adjust_for_ambient_noise(source)  # Adjust for ambient noise
+        audio_data = recognizer.listen(source)  # Listen for the audio input
+
+    try:
+        # Recognize speech using Google Speech Recognition
+        text = recognizer.recognize_google(audio_data)
+        print("You said:", text)
+        return text
+
+    except sr.UnknownValueError:
+        print("Sorry, I could not understand what you said.")
+        return None
+
+    except sr.RequestError as e:
+        print("Could not request results from Google Speech Recognition service; {0}".format(e))
+        return None
 
 ##################Main################################
 if __name__ == "__main__":
     # Replace 'your_kb.csv' with the actual path to your CSV file
-    knowledge_base_path = 'KB.csv'
+    knowledge_base_path = 'WOW-KB.csv'
     knowledge_base = load_knowledge_base(knowledge_base_path)
 
     print("Welcome! Ask me anything or type 'exit' to end the conversation.")
     
     while True:
         user_input = input("You: ")
+        if user_input == "I want to speak to you":
+            user_input = speech_to_text()
         
         if user_input.lower() == 'chow':
             print("Chatbot: Goodbye! Have a great day.")
             break
+        elif user_input == 'What is this picture':
+            #loaded_model = load_model("wow_model.h5")
+            window = Tk()
+            button = Button(window,text="Browse",command=browse_file)
+            button.pack()
+            window.mainloop()
+            print(selected_filename)
+            predict_image(selected_filename)
         if user_input:
             answer = get_answer(user_input, knowledge_base)
             #print("Chatbot:", answer)
@@ -197,7 +266,6 @@ if __name__ == "__main__":
                               print('Incorrect: The provided information contradicts with the existing knowledge base.')
                            else:
                               print("Incorrect: The provided information is not supported by the existing knowledge base.")
-                        
                     elif cmd == 99:
                         print("I did not get that, please try again.")
             print("Chatbot:", answer)
