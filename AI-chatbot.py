@@ -127,6 +127,23 @@ def adjust_negation(expression):
         # Add a leading "-"
         return '-' + expression
 
+def extract_wonder_name(statement):
+    """
+    Extract wonder name and category from the statement between "Check that" and "is".
+    Return the wonder name without spaces.
+    """
+    start_index = statement.find("Check that") + len("Check that")
+    end_index = statement.find("is")
+
+    if start_index == -1 or end_index == -1:
+        return None, None  # "Check that" or "is" not found in the statement
+
+    # Extract the wonder name and category
+    wonder_info = statement[start_index:end_index].strip()
+    wonder_info = wonder_info.replace(" ", "")  # Remove spaces
+    wonder_name, category = wonder_info, statement[end_index+3:].strip()  # Extract category after "is"
+
+    return wonder_name, category
 
 ####################Part C################################
 from tensorflow.keras.models import load_model
@@ -250,7 +267,9 @@ if __name__ == "__main__":
                             logic_kb.append(expr) 
                             print('OK, I will remember that',object,'is', subject)
                     elif cmd == 32: # if the input pattern is "check that * is *"
-                        object,subject=params[1].split(' is ')
+                        #object,subject=params[1].split(' is ')
+                        object,subject = extract_wonder_name(user_input)
+                        #expr = read_expr(category + '(' + wonder_name + ')')
                         expr=read_expr(subject + '(' + object + ')')
                         answer=ResolutionProver().prove(expr, logic_kb, verbose=True)
                         if answer:
@@ -272,27 +291,3 @@ if __name__ == "__main__":
         else:
             print("Chatbot: I'm sorry, I don't have enough information to answer that.")
             
-            
-            """#pre-process user input and determine response agent (if needed)
-            responseAgent = 'aiml'
-            #activate selected response agent
-            if responseAgent == 'aiml':
-                answer = kern.respond(user_input)
-            #post-process the answer for commands
-            if answer[0] == '#':
-                params = answer[1:].split('$')
-                cmd = int(params[0])
-                if cmd == 0:
-                    print(params[1])
-                    break
-                elif cmd == 1:
-                    try:
-                        wSummary = wikipedia.summary(params[1], sentences=3,auto_suggest=False)
-                        print(wSummary)
-                    except:
-                        print("Sorry, I do not know that. Be more specific!")
-                #elif cmd == 2:
-                elif cmd == 99:
-                    print("I did not get that, please try again.")
-        #answer = get_answer(user_input, knowledge_base)
-        #print("Chatbot:", answer)"""
