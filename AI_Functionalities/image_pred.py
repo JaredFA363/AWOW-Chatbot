@@ -3,7 +3,7 @@ from tensorflow.keras.preprocessing import image
 import numpy as np
 
 def predict_image(filename):
-    model = load_model("tuned_wow_model.h5")
+    model = load_model("tuned_wow_model.h5") #or untuned_wow_model.h5 for the lower accuracy
     # Load and preprocess the image
     img = image.load_img(filename, target_size=(200, 200))
     img_array = image.img_to_array(img)

@@ -1,19 +1,21 @@
 import csv
 import nltk
 from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer
+from nltk.stem import WordNetLemmatizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 nltk.download('stopwords')
+nltk.download('punkt')
+nltk.download('wordnet')
 
 def preprocess_text(text):
-    # Tokenize, remove stopwords, and apply stemming
+    # Tokenize, remove stopwords, and apply lemmatization
     stop_words = set(stopwords.words('english'))
-    stemmer = PorterStemmer()
+    lemmatizer = nltk.stem.WordNetLemmatizer()
     tokens = nltk.word_tokenize(text.lower())
-    stemmed_tokens = [stemmer.stem(token) for token in tokens if token.isalnum() and token not in stop_words]
-    return ' '.join(stemmed_tokens)
+    lemmatized_tokens = [lemmatizer.lemmatize(token) for token in tokens if token.isalnum() and token not in stop_words]
+    return ' '.join(lemmatized_tokens)
 
 def load_knowledge_base(file_path):
     # Load knowledge base from CSV file

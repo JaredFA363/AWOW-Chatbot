@@ -63,10 +63,38 @@
 <category><pattern> CHECK THAT * IS *</pattern>
   <template>#32$<star index="1"/> is <star index="2"/></template></category>  
 
-
-
 <!--- Image Recognition -->
+<category><pattern> WHAT IS THIS PICTURE </pattern>
+  <template>#41$Identified.</template></category>
 
+<category><pattern> WHAT IS THIS IMAGE </pattern>
+  <template><srai>WHAT IS THIS PICTURE</srai></template></category>
+  
+<!--- Speech Recognition -->
+<category><pattern> I WANT TO SPEAK TO YOU </pattern>
+  <template>#51$Thank you for talking to me.</template></category>
+
+<category><pattern> LET ME TELL YOU SOMETHING </pattern>
+  <template><srai>I WANT TO SPEAK TO YOU</srai></template></category>
+
+<category><pattern> LET ME SPEAK TO YOU </pattern>
+  <template><srai>I WANT TO SPEAK TO YOU</srai></template></category>
+  
+<category><pattern> I WANT TO TELL YOU SOMETHING </pattern>
+  <template><srai>I WANT TO SPEAK TO YOU</srai></template></category>
+  
+<category><pattern> LET ME ASK YOU A QUESTION </pattern>
+  <template><srai>I WANT TO SPEAK TO YOU</srai></template></category>
+  
+<category><pattern> I WANT TO ASK YOU A QUESTION </pattern>
+  <template><srai>I WANT TO SPEAK TO YOU</srai></template></category>
+
+<!--- Wonder Recommendation -->
+<category><pattern> RECCOMMEND ME A WONDER TO VISIT </pattern>
+  <template>#61$I highly reccommend it.</template></category>
+  
+<category><pattern> RECCOMMEND ME A WONDER TO GO TO </pattern>
+  <template><srai>RECCOMMEND ME A WONDER TO VISIT</srai></template></category>
 
 <!-- Default reaction -->
 <category><pattern> * </pattern>

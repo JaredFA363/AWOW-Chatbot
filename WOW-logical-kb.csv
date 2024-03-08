@@ -1,6 +1,7 @@
 ﻿Ancient(x)->Wonder(x)
 Modern(x)->Wonder(x)
--Ancient(TajMahal)
+Modern(x)->-Ancient(x)
+Ancient(x)->-Modern(x)
 Modern(TajMahal)
 Modern(RomanColossuem)
 Ancient(TempleKarnak)
